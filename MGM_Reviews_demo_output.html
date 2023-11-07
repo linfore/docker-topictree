@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Tree View</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .column {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            min-height: 500px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        li.active {
+            background-color: #eee;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+
+        .Positive Comments {
+            background-color: green;
+        }
+
+        .Negative Comments {
+            background-color: red;
+        }
+        .content-item {
+            border: 1px solid #cccccc; 
+            padding: 5px;             
+            margin-bottom: 25px;       
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="column">
+            <h3>Topics</h3>
+            <div>Select a topic to view comments:</div>
+            <hr/>
+            <ul id="person-list"></ul>
+        </div>
+
+        <div class="column">
+            <h3 style="color: green;">Positive Comments</h3>
+            <div>Select a comment to view details:</div>
+            <hr/>
+            <ul style="color: green;", id="groupA-list"></ul>
+        </div>
+
+        <div class="column">
+            <h3 style="color: red;">Negative Comments</h3>
+            <div>Select a comment to view details:</div>
+            <hr/>
+            <ul style="color: red;", id="groupB-list"></ul>
+        </div>
+
+        <div class="column">
+            <h3>Review Contents</h3>
+            <ul id="content-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        const tree_data = {'MGM (21)': {'Positive Comments': {'great (2)': [10.0, 34.0], 'the best hotel on the strip (1)': [2.0], 'very clean hotel with very friendly staff (1)': [2.0], 'top notch (1)': [9.0], 'excellent hotel (1)': [15.0], 'great place (1)': [19.0], 'one of my staples (1)': [19.0], 'pleasantly surprising (1)': [32.0], 'clean and fun (1)': [32.0], 'always completely satisfied (1)': [33.0], 'great resort (1)': [34.0], 'clean (1)': [36.0]}, 'Negative Comments': {'makes too much money to not afford upkeep (1)': [6.0], 'old (1)': [11.0], 'poor response from staff (1)': [17.0], "won't stay at any hotel on the strip going forward (1)": [31.0], 'mgm... you can do better (1)': [36.0], 'do not stay (1)': [37.0], 'not famous (1)': [39.0], 'way too expensive (1)': [39.0]}}, 'room (18)': {'Positive Comments': {'clean (2)': [7.0, 29.0], 'clean and comfortable (1)': [15.0], 'great rooms (1)': [33.0], 'enough space for my family (1)': [34.0]}, 'Negative Comments': {'criminal charge (1)': [6.0], 'not great (1)': [10.0], 'dirty and smelled like smoke (1)': [12.0], 'darkness, uncomfortable bed (1)': [14.0], 'over priced, old & beat up (1)': [16.0], 'broken and dated (1)': [20.0], 'dated, small, not very clean (1)': [22.0], 'no water in the room (1)': [25.0], 'not cleaned well with long hair strands clearly visible (1)': [27.0], 'not great for that price tag (1)': [30.0], 'dated, smelled like cigarettes and rust (1)': [31.0], 'dark and outdated (1)': [35.0], 'dirty room (1)': [38.0]}}, 'location (7)': {'Positive Comments': {'great location (2)': [19.0, 33.0], 'great walking location to new york new york, excalibur, luxor, and mandalay bay (1)': [2.0], 'convenient location (1)': [15.0], 'like location (1)': [23.0], 'good (1)': [29.0]}, 'Negative Comments': {'terrible (1)': [22.0]}}, 'staff (6)': {'Positive Comments': {'very awesome (1)': [6.0], 'friendly and accommodating (1)': [14.0], 'great staff (1)': [30.0], 'friendly and eager to please (1)': [33.0]}, 'Negative Comments': {'not friendly or helpful (1)': [18.0], 'act like they are doing you a favor (1)': [35.0]}}, 'pool (6)': {'Positive Comments': {'great pools (1)': [33.0], 'heated and nice (1)': [36.0]}, 'Negative Comments': {'no pool (1)': [6.0], 'closed pools (1)': [17.0], 'bummed we didn’t make it to the pool (1)': [21.0], 'pool was crowded (1)': [23.0]}}, 'fridge (4)': {'Positive Comments': {}, 'Negative Comments': {'no fridge (2)': [6.0, 8.0], 'charge for leftovers (1)': [11.0], 'packed with overpriced useless items (1)': [12.0]}}, 'tv (4)': {'Positive Comments': {}, 'Negative Comments': {"horrible and don't work (1)": [6.0], 'part time (1)': [10.0], 'buffering issues (1)': [13.0], 'tv wasn’t working (1)': [27.0]}}, 'shower (4)': {'Positive Comments': {}, 'Negative Comments': {'ripped up (1)': [8.0], 'shows how long since the room has been updated (1)': [27.0], 'cold shower my last morning (1)': [27.0], 'one of the worst (1)': [35.0]}}, 'casino (4)': {'Positive Comments': {'nice, but other casinos have more to offer (1)': [16.0], 'nice size casino (1)': [33.0]}, 'Negative Comments': {'smelled of smoke (1)': [11.0], 'dark and dingy (1)': [28.0]}}, 'lazy river (4)': {'Positive Comments': {'lazy river would have been fun (1)': [21.0], 'lots of fun (1)': [32.0], 'great for my daughter (1)': [34.0]}, 'Negative Comments': {'no lazy river (1)': [17.0]}}, 'front desk (4)': {'Positive Comments': {}, 'Negative Comments': {'poor response from front desk (1)': [17.0], 'front desk never fixed the issue (1)': [23.0], 'no help (1)': [24.0], 'never happened during my 3 night stay (1)': [27.0]}}, 'restaurants (3)': {'Positive Comments': {'the best restaurants (1)': [2.0], 'lots to choose from (1)': [32.0], 'great restaurants (1)': [33.0]}, 'Negative Comments': {}}, 'resort (3)': {'Positive Comments': {'favorite vegas resort (1)': [33.0]}, 'Negative Comments': {'smelly resort (1)': [3.0], 'not friendly (1)': [39.0]}}, 'internet (3)': {'Positive Comments': {}, 'Negative Comments': {'horrible internet (1)': [5.0], 'no reliable connection (1)': [13.0], 'slow and intermittent (1)': [39.0]}}, 'furniture (3)': {'Positive Comments': {}, 'Negative Comments': {'as old as the mob movies filmed out here (1)': [6.0], 'aged and old (1)': [8.0], 'needs to be replaced (1)': [35.0]}}, 'monorail (3)': {'Positive Comments': {'liked (1)': [11.0], 'nice having the monorail (1)': [15.0]}, 'Negative Comments': {'super busy (1)': [7.0]}}, 'experience (3)': {'Positive Comments': {}, 'Negative Comments': {'poor experience (1)': [8.0], 'just blaw (1)': [11.0], 'underwhelming experience (1)': [25.0]}}, 'stay (3)': {'Positive Comments': {'just what we needed (1)': [21.0], 'very nice (1)': [29.0]}, 'Negative Comments': {'not staying again (1)': [25.0]}}, 'vegas (2)': {'Positive Comments': {'favorite vacations (1)': [1.0], 'great (1)': [10.0]}, 'Negative Comments': {}}, 'resort fee (2)': {'Positive Comments': {}, 'Negative Comments': {'$33 (1)': [4.0], 'cannot avoid (1)': [39.0]}}, 'gym (2)': {'Positive Comments': {}, 'Negative Comments': {'no gym (1)': [6.0], 'gym doesn’t open until 7am (1)': [27.0]}}, 'housekeeping staff (2)': {'Positive Comments': {'courteous and goes beyond (1)': [9.0], 'efficient (1)': [14.0]}, 'Negative Comments': {}}, 'customer service (2)': {'Positive Comments': {'great (1)': [9.0]}, 'Negative Comments': {'not as high end (1)': [32.0]}}, 'bed (2)': {'Positive Comments': {}, 'Negative Comments': {'discomfort, cold, sore back (1)': [14.0], 'hard as a rock (1)': [31.0]}}, 'cleanliness (2)': {'Positive Comments': {'consistently clean (1)': [14.0], 'kept immaculate and looks like new (1)': [15.0]}, 'Negative Comments': {}}, 'dining options (2)': {'Positive Comments': {'plenty of dining options (1)': [15.0], 'plenty of (1)': [29.0]}, 'Negative Comments': {}}, 'hot water (2)': {'Positive Comments': {}, 'Negative Comments': {'no hot water (2)': [17.0, 25.0]}}, 'food (2)': {'Positive Comments': {'good food (1)': [19.0], 'great choices for food (1)': [21.0]}, 'Negative Comments': {}}, 'water (2)': {'Positive Comments': {}, 'Negative Comments': {'shut off or no cold water (1)': [20.0], 'expensive (1)': [39.0]}}, 'halloween (1)': {'Positive Comments': {'amazing (1)': [1.0]}, 'Negative Comments': {}}, 'wedding (1)': {'Positive Comments': {'after our wedding (1)': [1.0]}, 'Negative Comments': {}}, 'view (1)': {'Positive Comments': {'amazing (1)': [1.0]}, 'Negative Comments': {}}, 'sunrise (1)': {'Positive Comments': {'watch the sunrise everyday (1)': [1.0]}, 'Negative Comments': {}}, 'employees (1)': {'Positive Comments': {'amazing (1)': [1.0]}, 'Negative Comments': {}}, 'steakhouse (1)': {'Positive Comments': {'amazing (1)': [1.0]}, 'Negative Comments': {}}, 'dinner (1)': {'Positive Comments': {'after our wedding (1)': [1.0]}, 'Negative Comments': {}}, 'shows (1)': {'Positive Comments': {'great shows (1)': [2.0]}, 'Negative Comments': {}}, 'slot machines (1)': {'Positive Comments': {'lots of slot machines (1)': [2.0]}, 'Negative Comments': {}}, 'monorail route (1)': {'Positive Comments': {'a good way to visit other casinos on the strip (1)': [2.0]}, 'Negative Comments': {}}, 'shops (1)': {'Positive Comments': {'great experience through the shops (1)': [2.0]}, 'Negative Comments': {}}, 'casinos (1)': {'Positive Comments': {'great experience through the casinos (1)': [2.0]}, 'Negative Comments': {}}, 'las vegas (1)': {'Positive Comments': {'the only place we stay when visiting las vegas (1)': [2.0]}, 'Negative Comments': {}}, 'dirty rooms (1)': {'Positive Comments': {}, 'Negative Comments': {'dirty rooms (1)': [3.0]}}, 'empty nut shells (1)': {'Positive Comments': {}, 'Negative Comments': {'empty nut shells (1)': [3.0]}}, 'bathtub (1)': {'Positive Comments': {}, 'Negative Comments': {'disgusting bathtub (1)': [3.0]}}, 'hair and scum (1)': {'Positive Comments': {}, 'Negative Comments': {'hair and scum (1)': [3.0]}}, 'cleaning services (1)': {'Positive Comments': {}, 'Negative Comments': {'disgusting cleaning services (1)': [3.0]}}, 'cigarette smoke (1)': {'Positive Comments': {}, 'Negative Comments': {'smelly cigarette smoke (1)': [3.0]}}, 'perfume (1)': {'Positive Comments': {}, 'Negative Comments': {'strong perfume smell (1)': [3.0]}}, 'worst stay (1)': {'Positive Comments': {}, 'Negative Comments': {'worst stay (1)': [3.0]}}, 'air quality (1)': {'Positive Comments': {}, 'Negative Comments': {'terrible (1)': [4.0]}}, 'fees (1)': {'Positive Comments': {}, 'Negative Comments': {'small fees everywhere (1)': [4.0]}}, 'in room water (1)': {'Positive Comments': {}, 'Negative Comments': {'$25 per bottle (1)': [4.0]}}, 'atm withdrawal fee (1)': {'Positive Comments': {}, 'Negative Comments': {'$9.99 (1)': [4.0]}}, 'infrastructure (1)': {'Positive Comments': {}, 'Negative Comments': {'old in terms of infrastructure (1)': [4.0]}}, 'property (1)': {'Positive Comments': {'never disappoints (1)': [19.0]}, 'Negative Comments': {}}, 'desk (1)': {'Positive Comments': {}, 'Negative Comments': {'no desk in room (1)': [5.0]}}, 'family stay (1)': {'Positive Comments': {'fine for a family stay (1)': [5.0]}, 'Negative Comments': {}}, 'company (1)': {'Positive Comments': {}, 'Negative Comments': {'not for my company (1)': [5.0]}}, 'convention (1)': {'Positive Comments': {}, 'Negative Comments': {'not for a convention (1)': [5.0]}}, 'food and restaurants (1)': {'Positive Comments': {'nice food and restaurants (1)': [5.0]}, 'Negative Comments': {}}, 'microwave (1)': {'Positive Comments': {}, 'Negative Comments': {'no microwave (1)': [6.0]}}, 'coffee (1)': {'Positive Comments': {}, 'Negative Comments': {'no coffee (1)': [6.0]}}, 'update (1)': {'Positive Comments': {}, 'Negative Comments': {'huge update and renovation (1)': [6.0]}}, 'toilet paper (1)': {'Positive Comments': {}, 'Negative Comments': {'thin (1)': [7.0]}}, 'place to sleep (1)': {'Positive Comments': {'good (1)': [7.0]}, 'Negative Comments': {}}, 'table minimums (1)': {'Positive Comments': {}, 'Negative Comments': {'too high (1)': [7.0]}}, 'tiesto (1)': {'Positive Comments': {}, 'Negative Comments': {'gone (1)': [7.0]}}, 'sema convention (1)': {'Positive Comments': {}, 'Negative Comments': {'inflation (1)': [7.0]}}, 'mgm room (1)': {'Positive Comments': {}, 'Negative Comments': {'huge let down (1)': [8.0]}}, 'dirty carpet (1)': {'Positive Comments': {}, 'Negative Comments': {'dirty (1)': [8.0]}}, 'aged wallpaper (1)': {'Positive Comments': {}, 'Negative Comments': {'aged and old (1)': [8.0]}}, 'chairs (1)': {'Positive Comments': {}, 'Negative Comments': {'dirty and torn up (1)': [8.0]}}, 'luxuries (1)': {'Positive Comments': {}, 'Negative Comments': {'feeling like in a motel (1)': [8.0]}}, 'front desk clerk (1)': {'Positive Comments': {'courteous and goes beyond (1)': [9.0]}, 'Negative Comments': {}}, 'monorail station (1)': {'Positive Comments': {'convenient (1)': [9.0]}, 'Negative Comments': {}}, 'non-smoking areas (1)': {'Positive Comments': {}, 'Negative Comments': {'wish there were more (1)': [9.0]}}, 'worst room (1)': {'Positive Comments': {}, 'Negative Comments': {'worst (1)': [10.0]}}, 'gambling (1)': {'Positive Comments': {'a lot (1)': [10.0]}, 'Negative Comments': {}}, 'better room (1)': {'Positive Comments': {'better (1)': [10.0]}, 'Negative Comments': {}}, 'smoke eaters (1)': {'Positive Comments': {}, 'Negative Comments': {'not effective (1)': [11.0]}}, 'bathroom sink (1)': {'Positive Comments': {}, 'Negative Comments': {'not attached (1)': [11.0]}}, 'sensors (1)': {'Positive Comments': {}, 'Negative Comments': {'charged for because they shifted from their sensors (1)': [12.0]}}, 'dial up (1)': {'Positive Comments': {}, 'Negative Comments': {'faster than current connection (1)': [13.0]}}, 'lighting (1)': {'Positive Comments': {}, 'Negative Comments': {'consistently dim (1)': [14.0]}}, 'blanket (1)': {'Positive Comments': {}, 'Negative Comments': {'thin (1)': [14.0]}}, 'pillows (1)': {'Positive Comments': {}, 'Negative Comments': {'minimal support (1)': [14.0]}}, 'amenities (1)': {'Positive Comments': {'satisfactory (1)': [14.0]}, 'Negative Comments': {}}, 'bathroom (1)': {'Positive Comments': {'well-maintained (1)': [14.0]}, 'Negative Comments': {}}, 'comfort (1)': {'Positive Comments': {}, 'Negative Comments': {'lack of comfort (1)': [14.0]}}, 'quality (1)': {'Positive Comments': {}, 'Negative Comments': {'lack of quality (1)': [14.0]}}, 'beds (1)': {'Positive Comments': {'extremely comfortable (1)': [15.0]}, 'Negative Comments': {}}, 'activities (1)': {'Positive Comments': {'plenty to do (1)': [15.0]}, 'Negative Comments': {}}, 'master bathroom shower (1)': {'Positive Comments': {}, 'Negative Comments': {'handle was broke, water temperature issues (1)': [16.0]}}, 'reservation (1)': {'Positive Comments': {}, 'Negative Comments': {'cancelled reservation (1)': [17.0]}}, 'zion (1)': {'Positive Comments': {}, 'Negative Comments': {'changed plans (1)': [17.0]}}, 'kids (1)': {'Positive Comments': {}, 'Negative Comments': {'major disappointment for the kids (1)': [17.0]}}, 'vegas pool (1)': {'Positive Comments': {}, 'Negative Comments': {'no vibe (1)': [17.0]}}, 'water shutoff (1)': {'Positive Comments': {}, 'Negative Comments': {'no water (1)': [17.0]}}, 'loud noise (1)': {'Positive Comments': {}, 'Negative Comments': {'loud noise at night (1)': [17.0]}}, 'checkout (1)': {'Positive Comments': {}, 'Negative Comments': {'no compensation (1)': [17.0]}}, 'hotel stays (1)': {'Positive Comments': {}, 'Negative Comments': {'worst hotel stay (1)': [17.0]}}, 'response and service (1)': {'Positive Comments': {}, 'Negative Comments': {'disappointing response and service (1)': [17.0]}}, 'hotel staff (1)': {'Positive Comments': {}, 'Negative Comments': {'poor response from hotel staff (1)': [17.0]}}, 'management (1)': {'Positive Comments': {}, 'Negative Comments': {'reach out to management (1)': [17.0]}}, 'non-mgm properties (1)': {'Positive Comments': {}, 'Negative Comments': {'searching for other options (1)': [17.0]}}, 'resort fees (1)': {'Positive Comments': {}, 'Negative Comments': {'double charged (1)': [18.0]}}, 'hidden fees (1)': {'Positive Comments': {}, 'Negative Comments': {'consider when planning to book (1)': [18.0]}}, 'mgm hotel (1)': {'Positive Comments': {}, 'Negative Comments': {'not a good experience (1)': [18.0]}}, 'another company (1)': {'Positive Comments': {'better experience (1)': [18.0]}, 'Negative Comments': {}}, 'nightlife (1)': {'Positive Comments': {'great nightlife (1)': [19.0]}, 'Negative Comments': {}}, 'atmosphere (1)': {'Positive Comments': {'friendly atmosphere (1)': [19.0]}, 'Negative Comments': {}}, 'issues (1)': {'Positive Comments': {}, 'Negative Comments': {"weren't resolved (1)": [20.0]}}, 'window shade (1)': {'Positive Comments': {}, 'Negative Comments': {'broken (1)': [20.0]}}, 'advance notice (1)': {'Positive Comments': {}, 'Negative Comments': {'no advance notice (1)': [20.0]}}, 'checkin (1)': {'Positive Comments': {}, 'Negative Comments': {'no notice at checkin (1)': [20.0]}}, 'trip (1)': {'Positive Comments': {'good trip (1)': [21.0]}, 'Negative Comments': {}}, 'starbucks (1)': {'Positive Comments': {'plus starbucks (1)': [21.0]}, 'Negative Comments': {}}, 'noise (1)': {'Positive Comments': {}, 'Negative Comments': {'heard everyone walking down the hall all night, buzzing sound of the ac unit kept us up (1)': [22.0]}}, 'makeover (1)': {'Positive Comments': {}, 'Negative Comments': {'needs a major make over (1)': [22.0]}}, 'drink (1)': {'Positive Comments': {}, 'Negative Comments': {'never got a drink while gambling (1)': [23.0]}}, 'bathtub drain (1)': {'Positive Comments': {}, 'Negative Comments': {'bathtub drain was clogged (1)': [23.0]}}, 'restaurant (1)': {'Positive Comments': {'tap restaurant was good (1)': [23.0]}, 'Negative Comments': {}}, 'app (1)': {'Positive Comments': {'super easy (1)': [29.0]}, 'Negative Comments': {}}, 'running water (1)': {'Positive Comments': {}, 'Negative Comments': {'no running water (1)': [25.0]}}, 'maid service (1)': {'Positive Comments': {}, 'Negative Comments': {'poor maid service (1)': [25.0]}}, 'rewards trip (1)': {'Positive Comments': {'great time (1)': [26.0]}, 'Negative Comments': {}}, 'old dominion concert (1)': {'Positive Comments': {'fantastic (1)': [26.0]}, 'Negative Comments': {}}, 'host (1)': {'Positive Comments': {'super nice (1)': [26.0]}, 'Negative Comments': {}}, 'seats (1)': {'Positive Comments': {'better seats (1)': [26.0]}, 'Negative Comments': {}}, 'band (1)': {'Positive Comments': {'special band (1)': [26.0]}, 'Negative Comments': {}}, 'trash (1)': {'Positive Comments': {}, 'Negative Comments': {'trash outside the door from my 7pm check in and still there in the am (1)': [27.0]}}, 'breakfast option (1)': {'Positive Comments': {}, 'Negative Comments': {'line out the door at 7:01 (1)': [27.0]}}, 'services (1)': {'Positive Comments': {'huge (1)': [28.0]}, 'Negative Comments': {}}, 'modern properties (1)': {'Positive Comments': {'brightly colored and lit (1)': [28.0]}, 'Negative Comments': {}}, 'check-in/out (1)': {'Positive Comments': {'super easy (1)': [29.0]}, 'Negative Comments': {}}, 'recommend (1)': {'Positive Comments': {'would recommend (1)': [29.0]}, 'Negative Comments': {}}, 'disability room (1)': {'Positive Comments': {}, 'Negative Comments': {'terrible odor (1)': [30.0]}}, 'wear and tear (1)': {'Positive Comments': {}, 'Negative Comments': {'wear and tear is setting in (1)': [30.0]}}, 'mobility issues (1)': {'Positive Comments': {}, 'Negative Comments': {'too massive for people with mobility issues (1)': [30.0]}}, 'stay well room (1)': {'Positive Comments': {}, 'Negative Comments': {'scam (1)': [31.0]}}, 'in room purifier (1)': {'Positive Comments': {}, 'Negative Comments': {'nothing more than a fan (1)': [31.0]}}, 'wifi (1)': {'Positive Comments': {}, 'Negative Comments': {'never working (1)': [32.0]}}, 'electrical outlet (1)': {'Positive Comments': {}, 'Negative Comments': {'only one worked (1)': [32.0]}}, 'phone (1)': {'Positive Comments': {}, 'Negative Comments': {'covered in dust (1)': [32.0]}}, 'cleaning (1)': {'Positive Comments': {}, 'Negative Comments': {'poor reviews (1)': [32.0]}}, 'tram (1)': {'Positive Comments': {'convenient access to the tram (1)': [33.0]}, 'Negative Comments': {}}, 'mattresses (1)': {'Positive Comments': {}, 'Negative Comments': {'abysmal (1)': [35.0]}}, 'service (1)': {'Positive Comments': {}, 'Negative Comments': {'waited for over 15 minutes without service (1)': [35.0]}}, 'whiskey bar (1)': {'Positive Comments': {'fantastic (1)': [35.0]}, 'Negative Comments': {}}, '1923 bar (1)': {'Positive Comments': {'fantastic (1)': [35.0]}, 'Negative Comments': {}}, 'gold lounge (1)': {'Positive Comments': {}, 'Negative Comments': {"doesn't even have coffee (1)": [35.0]}}, 'injury (1)': {'Positive Comments': {}, 'Negative Comments': {'get injured (1)': [36.0]}}, 'waiver (1)': {'Positive Comments': {}, 'Negative Comments': {'sign a waiver (1)': [36.0]}}, 'slots (1)': {'Positive Comments': {}, 'Negative Comments': {'foot board came loose and cut his leg (1)': [36.0]}}, 'accident report (1)': {'Positive Comments': {}, 'Negative Comments': {'fill out an accident report (1)': [36.0]}}, 'machine (1)': {'Positive Comments': {}, 'Negative Comments': {'machine was broke (1)': [36.0]}}, 'free nights (1)': {'Positive Comments': {'2 nights free (1)': [36.0]}, 'Negative Comments': {}}, 'air (1)': {'Positive Comments': {}, 'Negative Comments': {'pay for our own air (1)': [36.0]}}, 'parking (1)': {'Positive Comments': {}, 'Negative Comments': {'pay for our own parking (1)': [36.0]}}, 'high rollers (1)': {'Positive Comments': {}, 'Negative Comments': {'catering to the high rollers (1)': [36.0]}}, 'guests (1)': {'Positive Comments': {'caring about all of your guests (1)': [36.0]}, 'Negative Comments': {}}, 'room smoking penalty (1)': {'Positive Comments': {}, 'Negative Comments': {'charged $500 (1)': [37.0]}}, 'manager (1)': {'Positive Comments': {}, 'Negative Comments': {'refused to remove (1)': [37.0]}}, 'money (1)': {'Positive Comments': {}, 'Negative Comments': {'hard to pay (1)': [37.0]}}, 'smokers (1)': {'Positive Comments': {}, 'Negative Comments': {'never been (1)': [37.0]}}, 'drugs (1)': {'Positive Comments': {}, 'Negative Comments': {'never used (1)': [37.0]}}, 'communication (1)': {'Positive Comments': {}, 'Negative Comments': {'poor communication (1)': [38.0]}}, 'internet service (1)': {'Positive Comments': {}, 'Negative Comments': {'horrible internet service (1)': [38.0]}}, 'expensive dinners (1)': {'Positive Comments': {}, 'Negative Comments': {'expensive dinners (1)': [38.0]}}, 'efficient house keeper (1)': {'Positive Comments': {'efficient house keeper (1)': [38.0]}, 'Negative Comments': {}}, 'room rate (1)': {'Positive Comments': {}, 'Negative Comments': {'expensive (1)': [39.0]}}, 'music (1)': {'Positive Comments': {}, 'Negative Comments': {'uncomfortable and annoying (1)': [39.0]}}, 'clients satisfaction (1)': {'Positive Comments': {}, 'Negative Comments': {'not care (1)': [39.0]}}};
+        const content_data = [{nan: 'date: nan | user: nan | \n\n\n'}, {1.0: 'date: October 2023 | user: triciaburda | \n\nWent to Vegas for Halloween\nWent to Vegas for Halloween and got married. It was one of my favorite vacations. The view was amazing, we got to watch the sunrise everyday. The employees at the steakhouse were amazing. We had our dinner there after our wedding. I can’t wait to come back.\n\n'}, {2.0: "date: August 2022 | user: Ron K | \n\nMGM Grand is the best Hotel on the strip IMHO\nMGM is very clean hotel with very friendly staff, the best restaurants, great shows, lots of slot machines, great walking location to New York New York, Excalibur, Luxor, and Mandalay Bay. My wife and I love the easy walk and experience through the shops and casinos to all the aforementioned hotels. It is also a stop on the Monorail route, which is a good way to visit other casinos on the strip. We've stayed at other hotels but MGM Grand is now the only place we stay when visiting Las Vegas.\n\n"}, {3.0: 'date: October 2023 | user: jeremya842023 | \n\nDirty rooms\nThe room had empty nut shells on the floor and the bathtub was full of hair and scum. I let it go the first night and politely informed housekeeping the next day instead of calling the desk and getting someone in trouble. Then after returning to my room after cleaning services the second day the bathtub was still disgusting and there were still empty nut shells on the floor. Also the entire resort smells heavily of cigarette smoke and/or perfume to try and cover the smell. I have stayed in other resorts in Las Vegas as I am there every year at this time and this stay was by far the worst that I have ever had.\n\n'}, {4.0: 'date: November 2023 | user: alY4645OQ | \n\nTerrible air quality, small fees everywhere\nIn room water - $25 per bottle.\nATM withdrawal fee - $9.99\nResort fee - $33\nAir quality--crap.\nJust charging for everything, on top of $300 a night (special business rate). Everything is old in terms of infrastructure.\n\n'}, {5.0: 'date: October 2023 | user: jmcqueen990 | \n\nDecent property just not during business week\nNo desk in room to check emails. Internet horrible. Fine for a family stay in Vegas, just not for me to have my company there during the week for a convention like SEMA. The food and restaurants were nice.\n\n'}, {6.0: "date: November 2023 | user: Asamo B | \n\nDo Not Stay Here\nthe staff was very awesome but to charge money and put a guest in room 22nd floor 222 is a criminal charge no fridge no microwave no coffee no pool no gym after 6 is stupid the tv is horrible and don't work the hotel makes too much money to not afford upkeep on tv the furniture is as old as the mob movies filmed out here so sad they need to be shut down and re opened after a huge update and renovation.\n\n"}, {7.0: 'date: October 2023 | user: Csinh301 | \n\n5 star\nRooms are clean, toilet paper kinda thin, room temps ok, view ok, good place to sleep. Thumbs up.Table minimums were too high. Windows green. Tiesto gone. Sad. Sema convention inflation. Not a fan. Monorail super busy.\n\n'}, {8.0: "date: November 2023 | user: marktB2974UB | \n\nMGM Room fail\nRoom was a huge let down..dirty carpet, aged and old wallpaper and furniture. 3 chairs, 2 dirty and 1 torn up and ripped. The shower curtail was ripped up. Ther is no fridge to use, no microwave(that's OK, but no fridge??? Really??) Just a poor experience. When you go on a trip, you look forward to resting in some luxurys..this had me feeling like I was in a motel.\n\n"}, {9.0: 'date: October 2023 | user: aroach815 | \n\nMGM GRAND SERVICE/STAFF TOP NOTCH\nFront desk clerk and housekeeping staff always courteous and goes beyond with great customer service! MGM has a monorail station which makes it so convenient to explore the strip! I wish there were more non-smoking areas for the casino floor.\n\n'}, {10.0: 'date: November 2023 | user: mikeO751YQ | \n\nIt was OK\nPlace was great, the room was not. TV worked part time and we were put in the worst room in the place. When I come to Vegas I spend a lot on gambling and expect a great room. I’ll be back but next time will insist on better room\n\n'}, {11.0: "date: October 2023 | user: andyC2624ZE | \n\nJust Fair\nThe hotel felt old, smoke eaters in the casino were not effective - By the time I walked from desk to my room - my clothes smelled of smoke. Bathroom sink was not attached and bounced around when you used it. I have traveled all my business career - experience was just blaw - and if I can't put anything in the fridge of my own leftovers from your restaurants without a charge - just not good at all. I did like you were on the monorail. .\n\n"}, {12.0: 'date: November 2023 | user: mannyc1172023 | \n\nAverage stay at best\nWe came on a package to see the usher concert. It was a two day stay so we werent in the room for long periods of time. Room was dirty and smelled like smoke. The fridge was packed with overpriced useless items that i ended up being charged for because they shifted from their sensors\n\n'}, {13.0: 'date: November 2023 | user: jeffhansen10 | \n\nIf you need internet, consider an alternative\nThe property is what you would expect from a casino unless you have a need for an internet connection. If it important to you or your stay, consider an alternative to this location. If that’s not possible, make sure to confirm your room has reliable connection. The TV wouldn’t even play without buffering. 90’s dial up was faster (when you could actually connect)\n\n'}, {14.0: "date: November 2023 | user: DruWright666 | \n\nJust Okay\nMy recent stay at the MGM Grand left me with a mix of impressions. The hotel's location, while not exceptional, was decent, and the staff demonstrated friendliness and a willingness to accommodate guests, leaving an overall satisfactory impression. However, my experience was marred by several disappointments related to the room.\n\nThe most significant issue was the room's darkness. Despite multiple light fixtures, the lighting was consistently dim, making it challenging to comfortably use the room. This deficiency was particularly frustrating during the day when proper lighting should be a given.\n\nThe bed was another letdown. Its discomfort impacted the quality of my sleep significantly. The mattress appeared well-worn,\nand with only a thin blanket and sheet, I often felt cold during the night. The pillows, too, were subpar, offering minimal support and resulting in waking up with a sore back each morning.\n\nOn a more positive note, the room was consistently clean, and the amenities provided were satisfactory. The bathroom was well-maintained, and the housekeeping staff delivered their services efficiently.\n\nWhile the MGM possessed certain merits, the persistent issues with the room's darkness and the uncomfortable bed overshadowed the positive aspects of my stay. I sincerely hope that the hotel takes measures to address these concerns in the future to enhance the comfort and quality of their rooms.\n\n"}, {15.0: 'date: October 2023 | user: Tour813888 | \n\nExcellent Hotel, Convenient Location\nI was there for a convention. Rooms were clean and the beds were extremely comfortable. Nice having the monorail right there too. Plenty of dining options and certainly plenty to do. The hotel is kept immaculate and looks like new.\n\n'}, {16.0: 'date: October 2023 | user: treyeliteauto | \n\nOur stay\nRooms were over priced for the condition. Furniture was old & beat up. Master bathroom shower the handle was broke and kept falling off. The water temperature was either ice cold or scorching hot. The casino was nice but other casinos have a lot more to offer.\n\n'}, {17.0: 'date: November 2023 | user: ANuminousOne | \n\nIssues aplenty, poor response from most staff. Find somewhere else to stay on the strip.\nWhere to start? I originally had a reservation in another property and cancelled to stay at the MGM Grand specifically because of its pools and lazy river. Bad move on my part.\n\n1) No hot water first day of our stay. Cold shower isn’t a great start.\n2) Changed plans and instead of going to Zion, we opted to stay near the hotel specifically to go to pools and lazy river (reason we chose MGM). Found all but 1 pool closed. No notification when we booked. Major disappointment for the kids. As an aside, I e never seen a Vegas pool with less vibe. 77° out, perfect pool weather, tons of people out crowded around the one pool. No music. No beverage service. No vibe at all.\n3) Went back to room to clean up before we made new plans. Now hot water wasn’t a problem because this time we had no water at all. Was told that I should have been notified about a water shutoff. Wasn’t notified about that either.\n4) Woken up at 2:30AM by a loud noise (sounded like a water pipe pressure issue to me), called front desk and was told another guest had complained about a “drilling sound” and they would send security to investigate. Noise finally stopped at 3:03AM.\n5) Noise returned around 3:30AM and continued after I mercifully fell asleep around 4AM.\n6) Spoke with a really nice person at the front desk on checkout. All that was offered though was to remove the $39 “resort fee”, kind but IMO hardly representative of all the issues we had.\n\nWhile not the end of the world, this was by far one of the worst hotel stays I’ve ever had. Issues happen, I get it. But when there are many other options for hotels, response and service is key. Vegas is all about catering to the guest. It’s was the response of most of the hotel staff (or lack thereof) that was so disappointing. I am going to try to reach out to management on Monday to give them the chance to make this right, but there are lots of other non-MGM properties in the strip. As of now, I’ll be searching out other options.\n\n'}, {18.0: 'date: November 2023 | user: Cruiser376758840199 | \n\nDouble charged resort fees, staff was not friendly or helpful\nDouble charged resort fees, staff was not friendly or helpful. I would consider hidden fees when planning to book at MGM over another hotel. At this point I do not think I will stay at another MGM hotel and I would be happy to give my business to another company that provides a better experience even if it comes at a higher price.\n\n'}, {19.0: 'date: October 2023 | user: l0rdphilc | \n\nAlways a great place to stay\nI have stayed at this property 15+ times, usually for 4-6 days.\n\nThe property never disappoints. Great nightlife, good food, friendly, atmosphere, and great location.\n\nI always stay at MGM properties in Las Vegas, MGM. Grand has been one of my staples.\n\n'}, {20.0: 'date: October 2023 | user: Greg P | \n\nBroken and dated.\nRoom had a number of issues that weren’t resolved. Room was dark, window shade broken. Water shut off or no cold water at times all the days of our stay. No advance notice. No notice at checkin that this was scheduled.\n\n'}, {21.0: 'date: October 2023 | user: r8rbrat72 | \n\nGood trip\nWe had never stayed here and it was just what we needed. I was bummed we didn’t make it to the pool. Lazy river would have been fun. Next time. Great choices for food and plus Starbucks. 3 of them that we saw!\n\n'}, {22.0: 'date: November 2023 | user: thatboyck | \n\nDated and Small Rooms\nThe room was dated, small, not very clean and in a terrible location. We heard everyone walking down the hall all night and the buzzing sound of the AC unit kept us up as well. This place needs a major make over.\n\n'}, {23.0: 'date: October 2023 | user: madrdh | \n\nJust OK\nLike location. Pool was in Winter mode. So only 2 pools open. That made pools crowded. Never got a drink while gambling. Bathtub drain was clogged, notified front desk 3x. Was never fixed. Tap restaurant was good.\n\n'}, {24.0: 'date: October 2023 | user: 890jerry | \n\nFront Desk no Help\nI was clearly in app. booked through the 30th. Front desk says was booked to 29th. Showed them 20 times app and reservation says thru 30th. They charged me another night, although I was clearly booked and paid through the 30th and said there is nothing they can do about it. MGM reservations is a different entity from MGM front desk.\n\nExpalin that BS\n\n'}, {25.0: 'date: November 2023 | user: Aaron | \n\nAvoid if you like running water\nOn our last night of a four night stay in one of the upgraded king spa suites.\n\nThree of four nights we didn’t have hot water. Two mornings we had no water in the room at all. Being hungover and unable to shower when you’re paying $300 a night for a room is a insane. Not sure it’s even legal to rent rooms without running water. Some third world sh*t.\n\nMaid service came ONLY ONCE in our four days. She did a half ass job and left a wet towel on our bed. How charming.\n\nOverall an underwhelming experience, to say the least. Will not being staying again.\n\n'}, {26.0: 'date: October 2023 | user: RKPeterson | \n\nRewards trip for Old Dominion concert\nWe had a great time! The Old Dominion concert was fantastic! Super nice host there helped give us better seats than we were randomly assigned. That is a special band for us, so it was greatly appreciated!\n\n'}, {27.0: 'date: November 2023 | user: Todd B | \n\nHorrible in many aspects.\nA rare review from me but wow…this place is bad. Really bad. It starts with the room. Trash outside the door from my 7pm check in and still there in the AM. Not cleaned well with long hair strands clearly visible. Then it has a shower curtain (not a complaint but shows how long since the room has been updated). Gym doesn’t open until 7am nor does the only sit down breakfast option which then has a line out the door at 7:01. TV wasn’t working and I asked the front desk to send someone. Never happened during my 3 night stay. And finally a cold shower my last morning. Never again.\n\n'}, {28.0: 'date: October 2023 | user: michaelafreed | \n\nA classic property but showing signs of age\nThis is a huge property. I was in Vegas for 6 days for a conference and was actually able to spend 2 entire days without leaving the property due to all the services available onsite there. Some areas are showing signs of age and I feel like the casino is kind of dark and maybe a bit dingy compared to more modern properties that are all brightly colored and lit.\n\n'}, {29.0: 'date: October 2023 | user: ckeller823 | \n\nWould Recommend\nOverall stay was very nice. Rooms were clean and check-in/out was super easy on the app. Plenty of dining options and good location on strip. I would stay again in the future and recommend staying here.\n\n'}, {30.0: "date: October 2023 | user: Trail12481951069 | \n\nGreat staff though, but the rooms were not great for that price tag at all.\nThe staff was ultra hepful and deserves a 5 star. The disability room we were in had a terrible odor. In both rooms that we stayed, you could see that wear and tear is setting in. It's too massive for people with mobility issues.\n\n"}, {31.0: 'date: October 2023 | user: r0bbiev13 | \n\nStay well scam\nThe stay well room was a scam. Rooms were dated smelled like cigarettes and rust. Bed was hard as a rock, the “in room purifier” was nothing more than a fan.\nI won’t stay at any hotel on the strip going forward regardless of price\n\n'}, {32.0: 'date: November 2023 | user: living_the_dream12 | \n\nPleasantly surprised\nI have been to Vegas too many times to count, but this was the first time to MGM Grand. I heard some reviews making it sound concerning in comparison to our usual favorites but it was actually pleasantly surprising.\n\nThe negatives:\n- wifi was never working in our room\n-only one electrical outlet in the entire room worked even after trying to reset them so to charge any electronics you had to rotate through plugging them in.\n-The phone was covered in a thick layer of dust and we dropped something on the ground and looked under the nightstand to look for it and found someone’s old liquor bottle under there. But overall clean except for those two things as I did see some poor reviews on the cleaning.\n\nOverall the hotel was clean and a fun crowd. The lazy river at the pool was lots of fun. Lots of restaurants to choose from, but not as high end customer service in the resort overall as some of the other higher end hotels.\n\n'}, {33.0: 'date: October 2023 | user: MMD-on-the-go | \n\nAlways Completely Satisfied With MGM Grand\nThis was the third time we stayed at MGM Grand. Great rooms, restaurants and pools. Nice size casino, great location. Convenient access to the tram. Staff is friendly and eager to please. Has become our favorite Vegas resort.\n\n'}, {34.0: 'date: October 2023 | user: aztecblue2 | \n\nGreat stay\nMgm is a great resort and provided all the services we needed. The room provided enough space for my family and was safe for everyone. The lazy river was great because my daughter enjoys going in the water. Great hotel.\n\n'}, {35.0: "date: October 2023 | user: fdipace | \n\nAbysmal mattresses and dark outdated room\nThe hotel rooms are in desperate need of un update. The mattresses are horrible. The room itself was dark even with all the lights on and the furniture needs to be replaced. The staff always seem to act like they are doing you a favor. The shower head was one of the worst I've ever experienced at a hotel. As for service, we waited at the Whiskey bar for over 15 minutes without service even though there were 3 waitresses. We left and went to the 1923 bar which was fantastic. It is in the walkway between the Luxor and the Mandalay Bay. Also the Gold lounge doesn't even have coffee.\n\n"}, {36.0: 'date: October 2023 | user: Cheryl B | \n\nClean hotel but if you get injured, plan on having to sign a waiver\nThe hotel itself is STUNNING AND CLEAN! The pool was heated and nice! Drinks are pricey but that’s anywhere in Vegas. My fiancé got injured on one of the slots where the foot board came loose and cut his leg. Security came and gave him a bandaid, and made him fill out an accident report, but they DIDNT FIX THE machine where it was broke, so it’s likely to happen to someone else who may get way more injured next time! They offered us 2 nights free to make it up next time we’re in Vegas. But limited the days we could come, told us we had to pay for our own air and parking, and that’s it! MGM… you can do better! Stop just catering to the high rollers and start caring about ALL of your guests! If you’re going to offer two free nights to make up for your error, do it right! Then they wanted him to sign a waiver to not talk about what happened, which we refused! That’s dirty!\n\n'}, {37.0: 'date: October 2023 | user: 777jake123 | \n\nDo not stay at MGM Grand\nCharged $500 in room smoking penalty. Nobody in our family has ever smoked. Manager said everyone says that and refused to remove the charge. Hard to pay that much money when you are innocent. We were in Las Vegas for my 12 year olds baseball tournament with my 80 year old mother. Never been smokers or ever used drugs.\n\n'}, {38.0: 'date: October 2023 | user: kimmarshall117 | \n\nPoor communication\nThey checked us into a dirty room and internet service was horrible. Only mini bar in room with expensive dinners should have refrigerator in rooms. Our saving grace was a very efficient house keeper that had our room ready within an hour\n\n'}, {39.0: 'date: October 2023 | user: Romtiger | \n\nMGM - not as famous\nWay too expensive hotel for what it offers. They charge a room rate, a room rate tax and a daily resort fee of $ 40 and they charge a resort fee tax also, so, you pay $46 more of the advertised room rate every day you stay here. And you cannot avoid the resort fee.\nOne bottle of water on the top of the room refrigerator( we thought is complimentary, but was not) is $ 22. Yes, $ 22 for one bottle of water. The internet advertised to be hi speed, is just a joke , is slow and intermittent.\nFriday night until 11:30 pm -12:00 am you can’t sleep or rest if you want. A crazy music from some club near to the hotel, ( or maybe from inside the hotel) makes your rest uncomfortable and annoying, especially if you have to get up early next morning to go to the airport.\nSo, all over, we were not satisfied with this resort . Is not friendly and does not care of clients satisfaction.\n\n'}, {40.0: 'date: nan | user: nan | \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'}];
+
+const personList = document.getElementById('person-list');
+const groupAList = document.getElementById('groupA-list');
+const groupBList = document.getElementById('groupB-list');
+const contentList = document.getElementById('content-list');
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    Object.entries(tree_data).forEach(([personName, personData], index) => {
+        const li = document.createElement('li');
+        li.textContent = personName;
+        li.addEventListener('click', function() {
+            selectPerson(index, li);  // pass the clicked element
+        });
+        personList.appendChild(li);
+    });
+
+    selectPerson(0, personList.querySelector('li'));
+});
+
+
+let selectedPerson = null; 
+
+function selectPerson(index) {
+    const previouslySelected = document.querySelector('#person-list .active');
+    if (previouslySelected) {
+        previouslySelected.classList.remove('active');
+    }
+    selectedPerson = personList.querySelectorAll('li')[index].textContent;
+    document.querySelectorAll('#person-list li')[index].classList.add('active');
+
+    const personName = document.querySelectorAll('#person-list li')[index].textContent;
+
+    displayGroups(personName);
+}
+
+
+function displayContent(groupName, itemName) {
+    contentList.innerHTML = '';
+
+    if (event && event.target) {
+        // Remove highlighting from all items in both lists
+        groupAList.querySelectorAll('li').forEach(item => item.style.backgroundColor = '');
+        groupBList.querySelectorAll('li').forEach(item => item.style.backgroundColor = '');
+
+        // Apply highlighting to the clicked item
+        event.target.style.backgroundColor = 'lightgray';
+    } else {
+        console.error("No valid event detected in displayContent");
+        return; // Exit the function early if no valid event is detected
+    }
+
+    const contentKeys = tree_data[selectedPerson][groupName][itemName] || [];
+
+    for (let key of contentKeys) {
+        let contentItem = content_data.find(cd => cd[key]);
+        if (contentItem) {
+            let li = document.createElement('li');
+            li.classList.add('content-item'); 
+            li.innerHTML = checkAndHighlightSentence(selectedPerson, itemName, groupName, contentItem[key]);
+
+
+            contentList.appendChild(li);
+        }
+    }
+}
+
+function selectItem(groupName, itemNumbers) {
+    populateContents(itemNumbers);
+
+}
+
+
+
+function displayGroups(person) {
+
+    const personData = tree_data[person];
+    
+    if (!personData) {
+        console.error("No data found for person:", person);
+        return;
+    }
+
+    groupAList.innerHTML = '';
+    groupBList.innerHTML = '';
+
+    const groupAItems = personData['Positive Comments'];
+    const groupBItems = personData['Negative Comments'];
+
+    for (let itemName in groupAItems) {
+        const liA = document.createElement('li');
+        liA.textContent = itemName;
+        liA.addEventListener('click', function() {
+            displayContent('Positive Comments', itemName);
+        });
+        groupAList.appendChild(liA);
+    }
+
+    for (let itemName in groupBItems) {
+        const liB = document.createElement('li');
+        liB.textContent = itemName;
+        liB.addEventListener('click', function() {
+            displayContent('Negative Comments', itemName);
+        });
+        groupBList.appendChild(liB);
+    }
+}
+
+
+function checkAndHighlightSentence(person, itemName, groupName, sentence) {
+    if (groupName === 'Positive Comments') {
+            const person0 = `${person}`;
+            const list1 = person0.split("(");
+            let person1 = list1[0].trim();
+
+            const phrase0 = `${itemName}`;
+            const list2 = itemName.split("(");
+            let phrase = list2[0].trim();
+     
+            const cur_phrase = processTextWithMultiWordPhraseCaseInsensitiveAndConditionChecking(phrase, person1);
+            const matched_sent = findSentencesContainingWords(sentence, cur_phrase) ;
+
+
+            let replacedSentence = matched_sent.reduce((currentSentence, match) => {
+              const highlight = `<span style="background-color: lime">${match}</span>`;
+              const regex = new RegExp(match.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g');
+              return currentSentence.replace(regex, highlight);
+            }, sentence);
+            return replacedSentence
+
+    } else {
+
+            const person0 = `${person}`;
+            const list1 = person0.split("(");
+            let person1 = list1[0].trim();
+
+            const phrase0 = `${itemName}`;
+            const list2 = itemName.split("(");
+            let phrase = list2[0].trim();
+     
+            const cur_phrase = processTextWithMultiWordPhraseCaseInsensitiveAndConditionChecking(phrase, person1);
+
+            const matched_sent = findSentencesContainingWords(sentence, cur_phrase) ;
+            sentence.replace(matched_sent, `<span style="background-color: #FF9966">${matched_sent}</span>`);
+
+
+            let replacedSentence = matched_sent.reduce((currentSentence, match) => {
+              const highlight = `<span style="background-color: #FF9966">${match}</span>`;
+              const regex = new RegExp(match.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g');
+              return currentSentence.replace(regex, highlight);
+            }, sentence);
+            return replacedSentence
+
+    }
+
+}
+
+function processTextWithMultiWordPhraseCaseInsensitiveAndConditionChecking(text, multiWordPhrase) {
+  
+  const text1 = text.toLowerCase();
+  const words = text1.split(" ");
+
+  if (text1.includes(multiWordPhrase)) {
+    return words;
+  }  
+  else {
+    multiWordPhraseWords_list = multiWordPhrase.split();
+
+    numberOfWordsInMultiWordPhrase = multiWordPhraseWords_list.length;
+
+    if (numberOfWordsInMultiWordPhrase > 1) {
+      numberOfMatches = 0;
+      for (word in multiWordPhraseWords_list) {
+        if (word in words) {
+          numberOfMatches += 1;
+        }
+      }
+
+      if (numberOfMatches == numberOfWordsInMultiWordPhrase - 1) {
+        return words;
+      }
+    }
+
+    else {
+
+        if (numberOfWordsInMultiWordPhrase == 1) {
+          for (word in words) {
+            if (word[word.length - 1] == 's') {
+              if (multiWordPhraseWords_list[0] == word.slice(0, word.length - 1)) {
+                return words;
+              }
+            }
+           }
+        }
+     
+    words.push(multiWordPhrase);
+    return words;
+     
+    }
+  }
+}
+
+
+function findSentencesContainingWords(text, words) {
+    function splitIntoSentences(text) {
+        return text.split(/(?:\.|\?|\!|\n|\||;|:|"| however | while | but )/g).filter(sentence => sentence.trim().length > 0);
+    }
+
+    function sentenceContainsSeventyPercentWords(sentence, words) {
+        let lowerCaseSentence = sentence.toLowerCase();
+
+        let count = words.reduce((accumulator, word) => {
+            // Create a RegExp that matches the word as a whole word, case insensitive
+            let regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'i');
+            // Test if lowerCaseSentence contains the whole word
+            return accumulator + (regex.test(lowerCaseSentence) ? 1 : 0);
+        }, 0);
+
+        return (count / words.length) >= 0.65;
+    }
+
+    let sentences = splitIntoSentences(text);
+    return sentences.filter(sentence => sentenceContainsSeventyPercentWords(sentence, words));
+}
+
+    </script>
+</body>
+</html>
+    
