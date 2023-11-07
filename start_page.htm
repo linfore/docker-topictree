@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>AI/ML Data Processing for Customer Insights and Action</title>
+    <style>
+
+        #ProjectDescription {
+            align-items: center;
+            margin-bottom: -20px;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .main-container {
+            display: flex;
+            padding-top: 10vh;
+            padding-bottom: 10vh;
+        }
+
+        #left-column {
+            width: 60%;
+            padding-right: 10px;
+
+        }
+
+        #right-column {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        iframe {
+            width: 100%;
+            height: 650px;
+        }
+
+        #fetchDataSection, #openHtmlSection, #uploadDataSection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+
+        #fetchDataDescription, #openHtmlDescription, #uploadDataDescription {
+            margin-bottom: 20px;
+        }
+
+
+        #openHtmlButton {
+            margin-bottom: -15px;
+        }
+
+
+
+        input[type="text"] {
+            margin-bottom: 15px;
+            
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #openSpecifiedHtmlButton {
+            margin-top: 20px; /* Adjust the value as needed */
+        }
+
+        #viewResultsButton {
+            margin-top: 20px; /* Adjust the value as needed */
+        }
+
+        #saveResultsButton {
+            margin-top: 20px; /* Adjust the value as needed */
+        }
+
+        #waitMessage {
+            margin-top: 20px;
+        }
+
+    #fetchDataMessage {
+        border: 1px solid #ccc;
+        padding: 20px;
+        background-color: #f9f9f9;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    #openSpecifiedHtmlButton {
+        background-color: lime; /* Lime color */
+        animation: blinker 1s linear 3; /* Blinking animation */
+    }
+
+    @keyframes blinker {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    #downloadLink button {
+        background-color: #00ffff; /* Lime */
+        color: black;
+        padding: 6px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+    input[type="file"] {
+    display: none;
+}
+
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="ProjectDescription" class="pt-4">
+        <h4 style="font-weight: bold">Project Intro</h4>
+        <div>
+            <p>Introducing a no-code AI/ML-powered data processing tool for content presentation, customer insights, and actions.</p>
+            <p> In today's age, data or information overload is a common problem for both businesses and consumers. When the amount of data is huge, a simple summary, even when produced by the most advanced AI models like ChatGPT, is often not enough. For example, Amazon.com now provides a summary of user reviews as a new feature, but when there are thousands of reviews, a short summary is not enough to help you make a purchase decision, and reading through a long list of reviews takes a lot of time and makes the user experience stressful.</p>
+            <p>This application is based on the cognitive principle of how people process and consume information. It utilizes the most advanced Al models and algorithms to transform a large amount of raw data into a format that is easily consumed by users.</p>
+            <p>The embedded web page on the left side contains user reviews for the MGM Grand Hotel in Las Vegas. As you can see, there are more than 40,000 reviews for this hotel alone, which makes it impossible for anyone to utilize all the information available. For this demo, a sample data set is collected and can be stored locally. Click on the upload button and see how the AI technology transforms the raw data into customer insights and business actions.</p>
+        
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="row">
+
+            <div class="col-7">
+                <iframe id="embeddedBrowser" src="https://www.tripadvisor.com/Hotel_Review-g45963-d91891-Reviews-MGM_Grand-Las_Vegas_Nevada.html" style="height: 1000px"></iframe>
+            
+                <!-- 
+            <iframe id="embeddedBrowser" src="MGM GRAND - Updated 2023 Prices & Resort Reviews (Las Vegas, NV).html"></iframe>
+                
+                <iframe id="embeddedBrowser" src="demo_output.html"></iframe>
+                -->
+            </div>
+        
+            <div class="col-5">
+                <h4 style="width: 100%; text-align: center; font-weight: bold;">Instructions</h4>
+                <div id="fetchDataSection">
+                    <h5 style="text-align: left; width: 100%;">Step 1:  Provide a url and click fetch data to collect review data from a site</h5>
+                    <div id="fetchDataDescription">
+                        <!-- Description for Fetch Data -->
+                        <br/>
+                        (Note: User-provided url input is disabled for the demo. A pre-collected data set of user reviews for the MGM hotel at Las Vegas has already been collected and a file named "MGM_Reviews.csv" can be downloaded locally from the below Download button. After downloading, use the Upload Data button in Step 2 to select that file for processing.)
+                    </div>
+                    <input type="text" id="urlInput" style="width: 180px" placeholder="URL currently disabled">
+                    <button id="fetchDataButton">Fetch Data</button>
+                    <div id="fetchDataMessage" style="display: none;">
+                        <p>This function of automatically collecting review data from URL is disabled for the demo. Please download a pre-collected data set for processing.</p>
+                        <button onclick="closeFetchDataMessage()">Close</button>
+                    </div>            
+
+                <!-- Download Button -->
+    <!--            <a id="downloadLink" href="" download style="display: none;">  -->
+                    <a class="btn btn-primary mt-2" id="downloadLink" href="MGM_Reviews.csv" download style="display: block;" >
+                        Download Pre-collected Sample Data
+                    </a>
+
+
+                </div>
+                            
+                <div id="uploadDataSection">
+                    <h5 style="text-align: left; width: 100%;">Step 2: Upload data for processing</h5>
+                    <div id="uploadDataDescription">
+                        <!-- Description for Upload Data -->
+                        <br/>
+                        (Note: due to the long response time from multiple Al/ML models, if you select the pre-collected data file named "MGM_Reviews.csv", a pre-processed result will be displayed. If you want to use your own data, store your data in a csv file in the same format as the example data file downloaded. The processing will be limited to 300 words for this demo. For processing more data, please contact the developer at the bottom of page.)<br><br>
+                        
+                    </div>
+
+
+                    <input type="file" id="fileInput">
+                    <button class="btn btn-dark" id="uploadDataButton">Upload Data for Processing</button><br/>
+                    <input type="text" id="apiKeyInput" style="width: 100%" placeholder="A demo API Key has already been provided.">
+
+                    
+                    <button id="viewResultsButton" style="display: none;">View Processed Results</button>
+                    <button id="saveResultsButton" style="display: none;">Save Processed Results</button>
+                    <button id="openSpecifiedHtmlButton" style="display: none;">View Processed Results</button>
+                    <div id="waitMessage" style="color: green; display: none;"><strong> Processing upload....please wait. A View Result button will appear shortly. While waiting, you may click the Docker Review button below to see the results of a preprocessed data set.</strong></div>
+
+                </div>
+
+                <div id="openHtmlSection">
+                    <h5 style="width: 100%; text-align: left;">Sample result (pre-generated)</h5>
+                    <div id="openHtmlDescription">
+                        <!-- Description for Open HTML File -->
+                        Click the link below to see pre-processed results based on 100 user reviews of the Docker product, data collected from g2.com/products/docker-inc-docker/reviews and capterra.com/p/148132/Docker/reviews
+
+                    </div>
+                    <a style="text-decoration: underline; cursor: pointer; color: blue;" id="openHtmlButton">Docker Reviews Demo</a>
+                </div>
+
+                <div id = "ContactDeveloper">To enable all functions, please contact the developer at linfoprod98@gmail.com</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+
+
+<script>
+
+
+    document.getElementById('uploadDataButton').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        if (event.target.files.length > 0) {
+            uploadData(event.target.files[0]);
+        }
+    });
+
+    async function getResults(selectedFile) {
+        const apiEndpoint = 'https://skillseer.fly.dev/topictree'; // Replace with your API endpoint
+        // const apiKey = document.getElementById('apiKeyInput').value;
+        const formData = new FormData();
+        const apiKey = 'ksjdflk3lkdfkjljf738'
+
+        // Append the file to the FormData object
+        formData.append('file', selectedFile);
+
+        // Call the API
+        try {
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'API-Key': apiKey, // Assuming the API expects the key in the header
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+            // Check the response type you are expecting
+            const contentType = response.headers.get('content-type');
+
+            if (contentType.includes('text/html')) {
+                // If an HTML file is expected
+                const htmlContent = await response.text();
+                // Assuming you have a function to handle displaying the HTML content
+                processedHtmlContent = htmlContent
+                alert('Server is currently not responding. Please try later. Also make sure the pre-assigned API key for this demo has not reached its limit.')
+            } else {
+                console.error('Unexpected content type:', contentType);
+            }
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+
+    function uploadData(selectedFile) {
+
+        document.getElementById('openSpecifiedHtmlButton').style.display = 'none'; 
+        document.getElementById('viewResultsButton').style.display = 'none'; 
+        document.getElementById('saveResultsButton').style.display = 'none'; 
+
+
+        if (selectedFile.name === "MGM_Reviews.csv") {
+
+            showHourglassFor5SecondsAndDisplayOpenButton();
+        } else {
+
+            const shouldContinue = confirm("For this demo, the maximun words to be processed will be limited to 300. Do you want to continue?");
+            if (shouldContinue) {
+                getResults(selectedFile)
+
+            }
+
+        }
+    }
+
+
+    function showHourglassFor5SecondsAndDisplayOpenButton() {
+
+        document.getElementById('waitMessage').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('waitMessage').style.display = 'none';
+            document.getElementById('openSpecifiedHtmlButton').style.display = 'block';
+        }, 5000);
+ 
+    }
+
+    document.getElementById('openSpecifiedHtmlButton').addEventListener('click', function() {
+
+        const specifiedFilePath = "MGM_Reviews_demo_output.html"; // Replace with your         
+        window.open(specifiedFilePath, '_blank');
+    });
+
+
+
+    function displayResultButtons() {
+        document.getElementById('waitMessage').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('waitMessage').style.display = 'none';
+        document.getElementById('viewResultsButton').style.display = 'block';
+
+        document.getElementById('saveResultsButton').style.display = 'block';
+       }, 5000);
+
+    }
+
+    function showHourglass() {
+        // Implement the logic to show a loading indicator
+    }
+
+    function hideHourglass() {
+        // Implement the logic to hide the loading indicator
+    }
+
+    document.getElementById('viewResultsButton').onclick = function() {
+        const newWindow = window.open();
+        newWindow.document.write(processedHtmlContent);
+    };
+
+    document.getElementById('saveResultsButton').onclick = function() {
+        const blob = new Blob([processedHtmlContent], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'processed_results.html';
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    let processedHtmlContent = ""; 
+
+
+    document.getElementById('openHtmlButton').addEventListener('click', function() {
+        window.open('docker_review_output.html', '_blank');
+    });
+
+    function collectDataFromUrl(url) {
+        // Add your prewritten code here
+        console.log("Data collection for URL:", url);
+    }
+
+
+     document.getElementById('fetchDataButton').addEventListener('click', function() {
+        // Display the message window
+        document.getElementById('fetchDataMessage').style.display = 'block';
+        // Add the logic to fetch data here
+    });
+
+    function closeFetchDataMessage() {
+        document.getElementById('fetchDataMessage').style.display = 'none';
+    }
+   
+
+
+    function displayDownloadButton(fileUrl) {
+        var downloadLink = document.getElementById('downloadLink');
+        downloadLink.href = fileUrl; // Set the URL of the file to download
+        downloadLink.style.display = 'block'; // Make the download link visible
+    }
+
+
+
+
+
+async function uploadDataAndHandleResponse(selectedFile) {
+  const apiEndpoint = 'YOUR_API_ENDPOINT'; // Replace with your API endpoint
+  const apiKey = document.getElementById('apiKeyInput').value;
+  const formData = new FormData();
+
+  // Append the file to the FormData object
+  formData.append('file', selectedFile);
+
+  // Call the API
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'API-Key': apiKey, // Assuming the API expects the key in the header
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Check the response type you are expecting
+    const contentType = response.headers.get('content-type');
+
+    if (contentType.includes('text/html')) {
+      // If an HTML file is expected
+      const htmlContent = await response.text();
+      // Assuming you have a function to handle displaying the HTML content
+      displayHtmlContent(htmlContent);
+    } else if (contentType.includes('application/json')) {
+      // If a JSON object is expected
+      const jsonObject = await response.json();
+      // Handle the JSON object, e.g., save it locally
+      handleJsonObject(jsonObject);
+    } else {
+      console.error('Unexpected content type:', contentType);
+    }
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
+}
+
+// Function to handle the display of HTML content
+function displayHtmlContent(htmlContent) {
+
+  const newWindow = window.open();
+  newWindow.document.write(htmlContent);
+  newWindow.document.close();
+}
+
+// Function to handle the JSON object, e.g., save it locally
+function handleJsonObject(jsonObject) {
+  // Implement this function to handle JSON object
+  // For example, you can convert it to a Blob and create a download link
+  const blob = new Blob([JSON.stringify(jsonObject)], {type : 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = 'data.json';
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
+
+
+</script>
+
+</html>
