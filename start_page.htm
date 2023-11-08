@@ -285,6 +285,13 @@
             showHourglassFor5SecondsAndDisplayOpenButton();
         } else {
 
+//
+            if(!checkIfCsv(selectedFile)) {
+                alert('Please select a CSV file, and make sure the data fields are the same as the example file of "MGM_Reviews.csv".');
+                return; 
+            }
+//
+
             const shouldContinue = confirm("For this demo, the maximun words to be processed will be limited to 300. Do you want to continue?");
             if (shouldContinue) {
                 getResults(selectedFile)
@@ -293,6 +300,18 @@
 
         }
     }
+
+
+    function checkIfCsv(file) {
+        var fileName = file.name;
+        var extension = fileName.split('.').pop().toLowerCase();
+        if(extension !== 'csv') {
+            return false;
+        }
+        return true;
+    }
+
+
 
 
     function showHourglassFor5SecondsAndDisplayOpenButton() {
@@ -381,8 +400,8 @@
 
 
 
-
 async function uploadDataAndHandleResponse(selectedFile) {
+
   const apiEndpoint = 'YOUR_API_ENDPOINT'; // Replace with your API endpoint
   const apiKey = document.getElementById('apiKeyInput').value;
   const formData = new FormData();
